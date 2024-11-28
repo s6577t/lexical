@@ -25,7 +25,9 @@ import {$setBlocksType} from '@lexical/selection';
 import {INSERT_TABLE_COMMAND} from '@lexical/table';
 import {
   $createParagraphNode,
+  $createTextNode,
   $getSelection,
+  $insertNodes,
   $isRangeSelection,
   FORMAT_ELEMENT_COMMAND,
   LexicalEditor,
@@ -171,6 +173,19 @@ function getBaseOptions(editor: LexicalEditor, showModal: ShowModal) {
             }),
         }),
     ),
+    new ComponentPickerOption('Subject', {
+      icon: <i className={`icon user`} />,
+      keywords: ['subject'],
+      onSelect: () =>
+        editor.update(() => {
+          const selection = $getSelection();
+          if ($isRangeSelection(selection)) {
+            $setBlocksType(selection, () => $createHeadingNode(`h2`));
+            // $setBlocksType(selection, () => $createHeadingNode(`h${n}`));
+            $insertNodes([$createTextNode('Subject: ________')]);
+          }
+        }),
+    }),
     new ComponentPickerOption('Table', {
       icon: <i className="icon table" />,
       keywords: ['table', 'grid', 'spreadsheet', 'rows', 'columns'],
@@ -238,6 +253,11 @@ function getBaseOptions(editor: LexicalEditor, showModal: ShowModal) {
       icon: <i className="icon page-break" />,
       keywords: ['page break', 'divider'],
       onSelect: () => editor.dispatchCommand(INSERT_PAGE_BREAK, undefined),
+    }),
+    new ComponentPickerOption('Document Verification', {
+      icon: <i className={`icon card-checklist`} />,
+      keywords: ['services', 'document verification'],
+      onSelect: () => editor.update(() => {}),
     }),
     new ComponentPickerOption('Excalidraw', {
       icon: <i className="icon diagram-2" />,
